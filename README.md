@@ -34,7 +34,9 @@ service client, but if you want to - pls do.
 
 Please use this commands to perform basic communication with system:
 
-* Run: `curl --location 'http://localhost:8081/service/v1/users' \
+* To create a new user run: 
+```shell
+curl --location 'http://localhost:8081/service/v1/users' \
   --header 'Content-Type: application/json' \
   --data-raw '{
   "username":"i.ivanov",
@@ -42,27 +44,41 @@ Please use this commands to perform basic communication with system:
   "first_name": "Ivan",
   "last_name": "Ivanov",
   "password": "Qwerty!23"
-  }'`
-* Run: `curl --location 'http://localhost:8081/service/v1/users/login' \
+  }'
+```
+
+* To create a new user session run using credentials from previous step: 
+```shell
+curl --location 'http://localhost:8081/service/v1/users/login' \
   --header 'Content-Type: application/json' \
   --data '{
   "username": "i.ivanov",
   "password": "Qwerty!23"
-  }'`
-* Use `access_token` obtained from previous response to perform following operations:
-* Run: `curl --location 'http://localhost:8082/service/v1/records' \
+  }'
+```
+* To create a new record in the system use `access_token` obtained from previous step:
+```shell
+curl --location 'http://localhost:8082/service/v1/records' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: ••••••' \
   --data '{
   "name": "gmail.com", "value": "ololo123"
-  }'` to create a new record in the system
-* Run: `curl --location --request GET 'http://localhost:8082/service/v1/records' \
-  --header 'Content-Type: application/json' \
-  --header 'Authorization: Bearer ••••••'` to list all records created for current user
+  }'
+``` 
 
-* Run: `curl --location --request GET 'http://localhost:8082/service/v1/records/{RECORD_ID}' \
+* To list all records created for current user run: 
+```shell
+curl --location --request GET 'http://localhost:8082/service/v1/records' \
   --header 'Content-Type: application/json' \
-  --header 'Authorization: ••••••'` to get specific record information decrypted
+  --header 'Authorization: Bearer ••••••'
+``` 
+
+* To get specific record information decrypted run: 
+```shell
+curl --location --request GET 'http://localhost:8082/service/v1/records/{RECORD_ID}' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: ••••••'
+```
 
 ### Tests ###
 Testing cover is very poor due to the time limits
