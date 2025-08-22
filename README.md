@@ -60,7 +60,7 @@ curl --location 'http://localhost:8081/service/v1/users/login' \
 ```shell
 curl --location 'http://localhost:8082/service/v1/records' \
   --header 'Content-Type: application/json' \
-  --header 'Authorization: ••••••' \
+  --header 'Authorization: Bearer ••••••' \
   --data '{
   "name": "gmail.com", "value": "ololo123"
   }'
@@ -77,7 +77,7 @@ curl --location --request GET 'http://localhost:8082/service/v1/records' \
 ```shell
 curl --location --request GET 'http://localhost:8082/service/v1/records/{RECORD_ID}' \
   --header 'Content-Type: application/json' \
-  --header 'Authorization: ••••••'
+  --header 'Authorization: Bearer ••••••'
 ```
 
 ### Tests ###
