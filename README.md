@@ -1,6 +1,6 @@
 # PASSWORD MANAGER
 
-## Simple web service which provide functionality to store and recover encrypted passwords
+## Simple web service which provide functionality to store and recover encrypted passwords with strong focus on security and extendability
 ### all passwords in the system are encrypted with individual PGP keys created during registration step
 
 List of available functions:
@@ -11,7 +11,14 @@ List of available functions:
 4. Create/List/Get/Update/Delete password records for resources using JWT session token
 5. Logout from active session
 
-Note: Service made for test purposes only and need a lot of improvements
+* Note: `Keycloak` is used as user source with a lot of possibilities for future improvement, like multi-factor authentication, IAM etc and others. 
+## Service made for PoC purposes only and need a lot of improvements
+### Future improvements ###
+* Add more tests
+* Add features like upload PDF files..
+* Expand users service to use more possibilities provided by Keycloak including verbose Registration/Authorization flows
+* Use Vault to store secrets
+* Improve errors handling
 
 ## Setup
 
@@ -59,9 +66,3 @@ Please use this commands to perform basic communication with system:
 
 ### Tests ###
 Testing cover is very poor due to the time limits
-
-### Future improvements ###
-* Add more tests
-* Expand users service to use more possibilites provided by Keycloak including verbose Registration/Authorization flows
-* Use Vault to store secrets
-* Improve errors handling
