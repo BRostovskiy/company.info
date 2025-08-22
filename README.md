@@ -29,9 +29,6 @@ Note: for the testing purposes data for Keycloak is already in the dump so you d
 service client, but if you want to - pls do. 
 `docker-compose up -d --build`
 
-### Basic usage diagram ###
-![Basic usage](diagram.png)
-
 ## Basic usage
 
 Please use this commands to perform basic communication with system:
