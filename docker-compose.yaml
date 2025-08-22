@@ -75,6 +75,11 @@ services:
       POSTGRES_DB: manager
       POSTGRES_USER: managerAdmin
       POSTGRES_PASSWORD: managerPAsswd
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U managerAdmin -d manager"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     networks:
       - companyinfo-network
     ports:
@@ -96,8 +101,7 @@ services:
       - companyinfo-network
     depends_on:
       manager_db:
-        condition: service_started
-
+        condition: service_healthy
 networks:
   companyinfo-network:
     driver: bridge
