@@ -1,0 +1,103 @@
+version: "3.9"
+
+services:
+  users_keycloak:
+    container_name: "users_keycloak"
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    environment:
+      KC_HOSTNAME_PORT: 8080
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://users_db:5432/users
+      KC_DB_USERNAME: usersAdmin
+      KC_DB_PASSWORD: usersPAsswd
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_LOG_LEVEL: info
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e \"GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ./users/compose/keycloak_data:/opt/keycloak/data
+    ports:
+      - "8080:8080"
+      - "9000:9000"
+    networks:
+      - companyinfo-network
+    depends_on:
+      - users_db
+  users_db:
+    container_name: "users_db"
+    image: postgres:11.20-alpine
+    volumes:
+      - ./users/compose/var/run:/var/run:rw
+      - ./users/compose/initdb.d:/docker-entrypoint-initdb.d:ro
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: usersAdmin
+      POSTGRES_PASSWORD: usersPAsswd
+    networks:
+      - companyinfo-network
+    ports:
+      - 5432:5432
+  users:
+    build:
+      context: ./users
+    container_name: "users"
+    environment:
+      HTTP_SERVICE_ADDR: :8081
+      KEYCLOAK_BASE_URL: http://users_keycloak:8080
+      KEYCLOAK_REALM: companyinfo
+      KEYCLOAK_CLIENT_ID: ciadmin
+      KEYCLOAK_CLIENT_SECRET: XfrIqaizW1cQUnckPMAwcyGG7Hrj5XT2
+      DB_USER: usersAdmin
+      DB_PASSWORD: usersPAsswd
+      DB_HOST: users_db
+      DB_NAME: users
+    ports:
+      - "8081:8081"
+    networks:
+      - companyinfo-network
+    depends_on:
+      users_keycloak:
+        condition: service_healthy
+  manager_db:
+    container_name: "manager_db"
+    image: postgres:11.20-alpine
+    volumes:
+      - ./manager/compose/var/run:/var/run:rw
+      - ./manager/compose/initdb.d:/docker-entrypoint-initdb.d:ro
+    environment:
+      POSTGRES_DB: manager
+      POSTGRES_USER: managerAdmin
+      POSTGRES_PASSWORD: managerPAsswd
+    networks:
+      - companyinfo-network
+    ports:
+      - 5433:5432
+  manager:
+    build:
+      context: ./manager
+    container_name: "manager"
+    environment:
+      HTTP_SERVICE_ADDR: :8082
+      USERS_URL: http://users:8081
+      DB_USER: managerAdmin
+      DB_PASSWORD: managerPAsswd
+      DB_HOST: manager_db
+      DB_NAME: manager
+    ports:
+      - "8082:8082"
+    networks:
+      - companyinfo-network
+    depends_on:
+      manager_db:
+        condition: service_started
+
+networks:
+  companyinfo-network:
+    driver: bridge
