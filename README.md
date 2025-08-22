@@ -28,7 +28,9 @@ You can spin both services(users and manager) services up using the following co
 Note: for the testing purposes data for Keycloak is already in the dump so you don't need to spin up new REALM and 
 service client, but if you want to - pls do. 
 `docker-compose up -d --build`
-* Wait until all services up and running make sure that all 5 containers(`users`, `manager`, `users_db`, `manager_db`, `users_keycloak`) are up and running. If not, run it
+
+### Basic usage diagram ###
+![Basic usage](diagram.png)
 
 ## Basic usage
 
